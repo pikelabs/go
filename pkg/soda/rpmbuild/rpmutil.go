@@ -27,6 +27,9 @@ func mkdir(path string, fileMode os.FileMode) error {
 		if err = os.Mkdir(path, fileMode); err != nil {
 			return err
 		}
+		if stats, err = os.Stat(path); err != nil {
+			return err
+		}
 	}
 	mode := stats.Mode()
 	if !mode.IsDir() {
