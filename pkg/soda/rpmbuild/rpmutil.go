@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	SpecDir    = "SPEC"
+	SpecDir    = "SPECS"
 	SourcesDir = "SOURCES"
 	SRPMDir    = "SRPMS"
 	RPMSDir    = "RPMS"
@@ -40,7 +40,7 @@ func mkdir(path string, fileMode os.FileMode) error {
 
 // copy regular  file to desitnation (directory or file)
 func CopyFile(dest, src string) error {
-	destStats, err := os.Stat(src)
+	destStats, err := os.Stat(dest)
 	if err != nil {
 		return err
 	}
