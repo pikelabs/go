@@ -16,7 +16,7 @@ const (
 	RPMSDir    = "RPMS"
 )
 
-const defaultFileMode = 0600
+const defaultDirMode = 0700
 
 func mkdir(path string, fileMode os.FileMode) error {
 	stats, err := os.Stat(path)
@@ -88,10 +88,10 @@ func copyFile(dest, src string) (int64, error) {
 func MkBuildroot(workdir, spec string, sources []string) error {
 	specDir := path.Join(workdir, SpecDir)
 	srcDir := path.Join(workdir, SourcesDir)
-	if err := mkdir(specDir, defaultFileMode); err != nil {
+	if err := mkdir(specDir, defaultDirMode); err != nil {
 		return err
 	}
-	if err := mkdir(srcDir, defaultFileMode); err != nil {
+	if err := mkdir(srcDir, defaultDirMode); err != nil {
 		return err
 	}
 	if err := CopyFile(specDir, spec); err != nil {
