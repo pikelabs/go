@@ -40,6 +40,7 @@ func mkdir(path string, fileMode os.FileMode) error {
 
 // copy regular  file to desitnation (directory or file)
 func CopyFile(dest, src string) error {
+	fmt.Printf("%s -> %s\n", src, dest)
 	destStats, err := os.Stat(dest)
 	if err != nil {
 		return err
@@ -50,8 +51,41 @@ func CopyFile(dest, src string) error {
 		finalDest = path.Join(dest, fName)
 	}
 
-	_, err = copyFile(finalDest, src)
-	return err
+	src, err = filepath.Abs(src)
+	if err != nil {
+		return err
+	}
+
+	srcStats, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+
+	switch mode := srcStats.Mode(); {
+		case mode.IsRegular():
+			_, err = copyFile(finalDest, src)
+			return err
+		case mode.IsDir():
+			err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+				if path == src {
+					return nil
+				}
+				fmt.Printf("path %s\n", path)
+				mode := info.Mode()
+				if mode.IsRegular() {
+					return CopyFile(finalDest, path)
+				} else {
+					return fmt.Errorf("can't copy nested dirstories")
+				}
+			})
+			return err
+
+		default:
+			return fmt.Errorf("supporting only regular files or directories")
+		}
 }
 
 func copyFile(dest, src string) (int64, error) {

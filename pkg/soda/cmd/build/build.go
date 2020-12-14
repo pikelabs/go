@@ -57,10 +57,15 @@ func (o Options) Run() error {
 		return err
 	}
 
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
 	return soda.RunCmd("rpmbuild",
-		"--buildroot",
-		o.buildRoot,
-		o.rpmbuildExtraArgs,
 		"-bs",
+		"--define",
+		fmt.Sprintf("_topdir %s", o.buildRoot),
+		"--define",
+		fmt.Sprintf("_srcrpmdir %s", cwd),
 		pkg.Specfile)
 }
