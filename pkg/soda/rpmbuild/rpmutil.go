@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -66,21 +68,27 @@ func CopyFile(dest, src string) error {
 			_, err = copyFile(finalDest, src)
 			return err
 		case mode.IsDir():
-			err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
-				if err != nil {
-					return err
+			list, err := ioutil.ReadDir(src)
+			if err != nil {
+				return err
+			}
+			for _, info := range list {
+				fmt.Printf("processing %s\n", info.Name())
+				if strings.HasPrefix(info.Name(), ".") {
+					continue
 				}
-				if path == src {
-					return nil
-				}
-				fmt.Printf("path %s\n", path)
+				p := path.Join(src, info.Name())
+				fmt.Printf("path %s\n", p)
 				mode := info.Mode()
 				if mode.IsRegular() {
-					return CopyFile(finalDest, path)
+					err = CopyFile(finalDest, p)
 				} else {
-					return fmt.Errorf("can't copy nested dirstories")
+					err = fmt.Errorf("can't copy nested dirstories")
 				}
-			})
+				if err != nil {
+					break
+				}
+			}
 			return err
 
 		default:
@@ -140,3 +148,4 @@ func MkBuildroot(workdir, spec string, sources []string) error {
 
 	return nil
 }
+
