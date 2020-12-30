@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"code.pikelabs.net/go/pkg/soda"
-	"code.pikelabs.net/go/pkg/soda/rpmbuild"
+	"code.pikelabs.net/go/soda"
+	"code.pikelabs.net/go/soda/rpmbuild"
 )
 
 type Options struct {

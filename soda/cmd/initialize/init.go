@@ -1,25 +1,25 @@
 package initialize
 
 import (
-	"github.com/spf13/cobra"
 	"encoding/json"
 	"os"
-	"code.pikelabs.net/go/pkg/soda"
 	"strings"
+
+	"code.pikelabs.net/go/soda"
+	"github.com/spf13/cobra"
 )
 
 type Options struct {
 	specFile string
-	sources string
+	sources  string
 }
-
 
 func NewInitCmd() *cobra.Command {
 	var opts Options
 	c := &cobra.Command{
-		Use: "init",
+		Use:   "init",
 		Short: "initialize",
-		Run: func(cmd *cobra.Command, args []string){
+		Run: func(cmd *cobra.Command, args []string) {
 			opts.Prep()
 			opts.Run()
 		},
@@ -37,7 +37,7 @@ func (opts *Options) Prep() error {
 func (opts *Options) Run() error {
 	pkg := soda.Package{
 		Specfile: opts.specFile,
-		Sources: strings.Split(opts.sources, ","),
+		Sources:  strings.Split(opts.sources, ","),
 	}
 
 	f, err := os.Create(".sodafile")

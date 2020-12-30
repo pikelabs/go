@@ -1,10 +1,10 @@
-package cmd
+package main
 
 import (
-	"code.pikelabs.net/go/pkg/soda/cmd/build"
-	"code.pikelabs.net/go/pkg/soda/cmd/mockbuild"
-	"code.pikelabs.net/go/pkg/soda/cmd/prep"
-	"code.pikelabs.net/go/pkg/soda/cmd/initialize"
+	"code.pikelabs.net/go/soda/cmd/build"
+	"code.pikelabs.net/go/soda/cmd/initialize"
+	"code.pikelabs.net/go/soda/cmd/mockbuild"
+	"code.pikelabs.net/go/soda/cmd/prep"
 	"github.com/spf13/cobra"
 )
 

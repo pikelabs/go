@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"code.pikelabs.net/go/pkg/soda"
+	"code.pikelabs.net/go/soda"
 )
 
 type Options struct {

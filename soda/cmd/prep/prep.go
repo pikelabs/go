@@ -1,24 +1,24 @@
 package prep
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"io/ioutil"
-	"github.com/spf13/cobra"
-	"code.pikelabs.net/go/pkg/soda"
-	"code.pikelabs.net/go/pkg/soda/rpmbuild"
 
+	"code.pikelabs.net/go/soda"
+	"code.pikelabs.net/go/soda/rpmbuild"
+	"github.com/spf13/cobra"
 )
 
 type Options struct {
-	File string
+	File      string
 	BuildRoot string
 }
 
 func NewPrepCmd() *cobra.Command {
 	var opt Options
-	c := &cobra.Command {
-		Use: "prep",
+	c := &cobra.Command{
+		Use:   "prep",
 		Short: "Run prep stage of RPM build",
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 1 {
@@ -38,7 +38,6 @@ func NewPrepCmd() *cobra.Command {
 	return c
 }
 
-
 func (opts *Options) Prep(cmd *cobra.Command, args []string) error {
 	if len(args) < 1 {
 		return errors.New("command requires exectly one argument")
@@ -53,7 +52,6 @@ func (opts *Options) Prep(cmd *cobra.Command, args []string) error {
 	}
 	return nil
 }
-
 
 func (opts *Options) Run() {
 	rpmbuild.MkBuildroot(opts.BuildRoot, opts.File, []string{"./"})
