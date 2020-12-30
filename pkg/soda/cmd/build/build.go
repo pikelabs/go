@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"io/ioutil"
+
 	"github.com/spf13/cobra"
 
 	"code.pikelabs.net/go/pkg/soda"
@@ -23,6 +25,10 @@ func NewBuildCmd() *cobra.Command {
 		Use:   "build",
 		Short: "build SRPM from source code in using rpmbuild",
 		Run: func(cmd *cobra.Command, args []string) {
+			if err := o.Prep(cmd, args); err != nil {
+				fmt.Fprintf(os.Stderr, "err: %s\n", err)
+				return
+			}
 			if err := o.Run(); err != nil {
 				fmt.Fprintf(os.Stderr, "err: %s\n", err)
 			}
@@ -32,6 +38,17 @@ func NewBuildCmd() *cobra.Command {
 	cmd.PersistentFlags().StringVar(&o.rpmbuildExtraArgs, "rpmbuild-extra", "", "apply extra arguments to rpmbuild")
 	cmd.PersistentFlags().StringVar(&o.buildRoot, "buildroot", "", "set buildroot path")
 	return cmd
+}
+
+func (o *Options) Prep(cmd *cobra.Command, args []string) error {
+	if len(o.buildRoot) < 1 {
+		dir, err := ioutil.TempDir("", "soda")
+		if err != nil {
+			return err
+		}
+		o.buildRoot = dir
+	}
+	return nil
 }
 
 func (o Options) Run() error {

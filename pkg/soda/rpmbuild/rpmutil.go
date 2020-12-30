@@ -117,12 +117,19 @@ func copyFile(dest, src string) (int64, error) {
 
 	defer out.Close()
 
+
 	n, err := io.Copy(out, in)
 	if err != nil {
 		return n, err
 	}
 
+
 	err = out.Sync()
+	if err != nil {
+		return n, err
+	}
+	err = os.Chmod(dest, srcStats.Mode())
+	
 	return n, err
 }
 

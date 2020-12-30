@@ -1,16 +1,16 @@
 package soda
 
 import (
+	"archive/tar"
 	"encoding/json"
 	"fmt"
-	"os"
 	"io"
+	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
-	"archive/tar"
-	"os/exec"
-	"strings"
 	"regexp"
+	"strings"
 )
 
 type Package struct {
@@ -55,11 +55,10 @@ func (s *ShellStep) Run() error {
 	return Shellout(s.Cmd)
 }
 
-
 type TarballStep struct {
-	Name string `json:"name"`
-	List []string `json:"files"`
-	Basepath string `json:"base_path"`
+	Name     string   `json:"name"`
+	List     []string `json:"files"`
+	Basepath string   `json:"base_path"`
 	Excludes []string `json:"excludes"`
 }
 
@@ -106,7 +105,7 @@ func (s *TarballStep) Run() error {
 		}
 	}
 
-	return createTarball(fileList, s.Basepath,  f)
+	return createTarball(fileList, s.Basepath, f)
 }
 
 func matchedAny(s string, patterns []string) (bool, error) {
@@ -122,7 +121,7 @@ func matchedAny(s string, patterns []string) (bool, error) {
 	return false, nil
 }
 
-func createTarball(files []string, basepath string,  w io.Writer) error {
+func createTarball(files []string, basepath string, w io.Writer) error {
 	tw := tar.NewWriter(w)
 	defer tw.Close()
 	for _, f := range files {
@@ -132,7 +131,6 @@ func createTarball(files []string, basepath string,  w io.Writer) error {
 	}
 	return nil
 }
-
 
 func addToTar(w *tar.Writer, filename, basepath string) error {
 	file, err := os.Open(filename)
